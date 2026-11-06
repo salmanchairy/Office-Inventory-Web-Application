@@ -73,7 +73,7 @@
 
                 <div class="col-md-6">
 
-                    <div class="input-group">
+                    <form method="GET" class="input-group">
 
                         <span class="input-group-text bg-white">
 
@@ -84,11 +84,13 @@
                         <input
                             type="text"
                             id="searchAsset"
+                            name="search"
                             class="form-control"
                             placeholder="Cari asset, serial number, brand..."
+                            value="{{ $search }}"
                         >
-
-                    </div>
+                        <button class="btn btn-outline-primary" type="submit">Cari</button>
+                    </form>
 
                 </div>
 
@@ -144,7 +146,7 @@
                                 Status
                             </th>
 
-                            <th width="150">
+                            <th width="130">
                                 Aksi
                             </th>
 
@@ -329,7 +331,6 @@
 
                                         </a>
 
-                                        
                                 {{-- Hapus: hanya untuk Administrator --}}
                                 @if(auth()->user()?->role?->name === 'admin')
 
@@ -434,40 +435,3 @@
 </div>
 
 @endsection
-
-
-@push('scripts')
-
-<script>
-
-    document
-        .getElementById('searchAsset')
-        .addEventListener('keyup', function () {
-
-            let keyword = this.value.toLowerCase();
-
-            let rows = document.querySelectorAll(
-                '#assetTable tbody tr'
-            );
-
-            rows.forEach(function (row) {
-
-                let text = row.textContent.toLowerCase();
-
-                if (text.includes(keyword)) {
-
-                    row.style.display = '';
-
-                } else {
-
-                    row.style.display = 'none';
-
-                }
-
-            });
-
-        });
-
-</script>
-
-@endpush

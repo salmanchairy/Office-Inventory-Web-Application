@@ -5,16 +5,38 @@
 @section('content')
 
     <style>
-        /* Judul dashboard */
+        /* Header */
+        .dashboard-hero {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
         .dashboard-heading {
-            color: #073B78;
-            font-size: 28px;
-            font-weight: 700;
+            color: #173B63;
+            font-size: clamp(25px, 3vw, 31px);
+            font-weight: 750;
+            letter-spacing: -.65px;
         }
 
         .dashboard-subtitle {
-            color: #7186A2;
+            color: #70839A;
             font-size: 14px;
+        }
+
+        .dashboard-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 13px;
+            border: 1px solid #DCE8F3;
+            border-radius: 9px;
+            background: #FFF;
+            color: #607890;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         /* Kartu statistik */
@@ -22,27 +44,30 @@
             position: relative;
             height: 100%;
             min-width: 0;
-            padding: 22px !important;
+            overflow: hidden;
+            padding: 20px !important;
             border: 1px solid #E1EAF5;
-            border-radius: 12px;
+            border-radius: 14px;
             background: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(31, 82, 130, 0.05);
+            box-shadow: 0 5px 16px rgba(31, 82, 130, 0.045);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(31, 82, 130, 0.09);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(31, 82, 130, 0.09);
         }
 
         .stat-card p {
-            color: #617A99 !important;
-            font-size: 14px;
+            color: #71849A !important;
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .stat-card h2 {
-            color: #1769B0;
-            font-size: 30px;
+            color: #173B63;
+            font-size: 29px;
+            line-height: 1;
         }
 
         .stat-icon {
@@ -51,8 +76,8 @@
             height: 50px;
             align-items: center;
             justify-content: center;
-            border-radius: 15px;
-            font-size: 25px;
+            border-radius: 12px;
+            font-size: 22px;
         }
 
         .stat-icon-blue {
@@ -79,13 +104,13 @@
         .dashboard-panel {
             min-width: 0;
             border: 1px solid #E1EAF5 !important;
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             background: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(31, 82, 130, 0.05);
+            box-shadow: 0 5px 16px rgba(31, 82, 130, 0.045);
         }
 
         .dashboard-panel .card-header {
-            padding: 18px 20px;
+            padding: 17px 20px;
             border-bottom: 1px solid #E7EEF6;
             border-radius: 12px 12px 0 0;
             background: #FFFFFF;
@@ -93,7 +118,7 @@
 
         .dashboard-panel .card-header h5,
         .dashboard-panel h5 {
-            color: #073B78;
+            color: #173B63;
             font-size: 16px;
             font-weight: 700;
         }
@@ -101,22 +126,22 @@
         /* Menu cepat */
         .quick-action {
             display: flex;
-            min-height: 125px;
+            min-height: 118px;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 18px 10px;
+            gap: 9px;
+            padding: 17px 10px;
             border: 1px solid #D8E7F8;
-            border-radius: 9px;
-            background: #FFFFFF;
+            border-radius: 12px;
+            background: #FAFCFE;
             text-align: center;
             transition: 0.2s ease;
         }
 
         .quick-action:hover {
-            background: #F0F7FF;
-            border-color: #83BDF4;
+            background: #F1F8FF;
+            border-color: #8BC2F2;
             transform: translateY(-2px);
         }
 
@@ -126,14 +151,14 @@
             height: 48px;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            border-radius: 12px;
             background: #E3F1FF;
             color: #0878D1;
-            font-size: 23px;
+            font-size: 21px;
         }
 
         .quick-action-label {
-            color: #073B78;
+            color: #264766;
             font-size: 13px;
             font-weight: 700;
         }
@@ -177,13 +202,48 @@
             font-weight: 600;
         }
 
+        .alert-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 96px;
+            padding: 18px 20px;
+            border: 1px solid #E1EAF5;
+            border-radius: 14px;
+            background: #FFF;
+            box-shadow: 0 5px 16px rgba(31, 82, 130, .035);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .alert-card:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgba(31, 82, 130, .08); }
+        .alert-card-icon { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border-radius: 12px; font-size: 20px; }
+        .alert-card-warning .alert-card-icon { background: #FFF5DF; color: #D99418; }
+        .alert-card-danger .alert-card-icon { background: #FFF0F1; color: #D95061; }
+        .alert-card-label { color: #71849A; font-size: 12px; font-weight: 600; }
+        .alert-card-number { margin: 2px 0; color: #173B63; font-size: 24px; font-weight: 750; line-height: 1; }
+        .alert-card-copy { color: #8293A7; font-size: 12px; }
+
+        .system-row + .system-row { border-top: 1px solid #EDF2F7; }
+        .system-row { padding: 13px 0; }
+        .system-row .system-label { color: #74879E; font-size: 12px; }
+        .system-row .system-value { color: #294967; font-size: 12px; font-weight: 700; text-align: right; }
+
         /* Grafik */
+        .chart-panel { overflow: hidden; }
+        .chart-panel .card-body { padding: 20px; }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 430px;
+            max-width: 290px;
             margin: 0 auto;
         }
+
+        .condition-legend { display: grid; gap: 11px; }
+        .condition-legend-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border-radius: 9px; background: #F8FAFC; }
+        .condition-legend-name { display: flex; align-items: center; gap: 8px; color: #4C657E; font-size: 13px; font-weight: 600; }
+        .condition-legend-value { color: #173B63; font-size: 14px; font-weight: 750; }
+        .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+        .legend-good { background: #19A878; } .legend-minor { background: #F2AD34; } .legend-major { background: #E35D6A; }
 
         /* Hindari elemen dashboard melebar keluar layar */
         .content,
@@ -194,43 +254,74 @@
             max-width: 100%;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767.98px) {
+            .dashboard-hero { align-items: flex-start; flex-direction: column; gap: 12px; margin-bottom: 0; }
             .dashboard-heading {
                 font-size: 24px;
+                line-height: 1.18;
             }
 
+            .dashboard-subtitle { font-size: 13px; line-height: 1.55; }
+            .dashboard-date { padding: 7px 10px; font-size: 11px; }
+
             .stat-card {
-                padding: 16px !important;
+                min-height: 102px;
+                padding: 15px !important;
             }
 
             .stat-card h2 {
-                font-size: 25px;
+                font-size: 24px;
             }
 
+            .stat-card p { max-width: 82px; margin-bottom: 10px !important; font-size: 12px; line-height: 1.35; }
             .stat-icon {
-                width: 42px;
-                height: 42px;
-                font-size: 21px;
+                width: 38px;
+                height: 38px;
+                flex: 0 0 38px;
+                border-radius: 10px;
+                font-size: 18px;
             }
 
             .quick-action {
-                min-height: 105px;
+                min-height: 104px;
+                gap: 7px;
+                padding: 12px 5px;
             }
+
+            .quick-action-icon { width: 40px; height: 40px; border-radius: 10px; font-size: 18px; }
+            .quick-action-label { font-size: 11px; line-height: 1.25; }
+            .dashboard-panel .card-header { padding: 15px 16px; }
+            .dashboard-panel .card-header h5, .dashboard-panel h5 { font-size: 15px; }
+            .dashboard-panel.h-100.p-4 { padding: 16px !important; }
+
+            .alert-card { min-height: 82px; gap: 11px; padding: 14px 15px; }
+            .alert-card-icon { width: 38px; height: 38px; flex-basis: 38px; border-radius: 10px; font-size: 17px; }
+            .alert-card-number { font-size: 21px; }
+            .alert-card-copy { font-size: 11px; }
+
+            .asset-table thead th, .asset-table tbody td { padding: 12px 14px; }
+            .asset-detail-btn { min-width: 68px; padding-right: 9px; padding-left: 9px; }
+            .chart-panel .card-body { padding: 16px; }
+            .chart-container { max-width: 240px; }
+            .condition-legend { gap: 8px; }
+            .condition-legend-item { padding: 10px 11px; }
+        }
+
+        @media (max-width: 359.98px) {
+            .stat-card { padding: 12px !important; }
+            .stat-card p { max-width: 66px; font-size: 11px; }
+            .stat-icon { width: 34px; height: 34px; flex-basis: 34px; font-size: 16px; }
+            .quick-action-label { font-size: 10px; }
+            .alert-card-copy { display: none; }
         }
     </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-
+<div class="dashboard-hero w-100">
     <div>
-        <h3 class="fw-bold mb-1">
-            Dashboard
-        </h3>
-
-        <p class="text-muted mb-0">
-            Sistem Inventaris IT Server Room Pelindo Regional 1
-        </p>
+        <h1 class="dashboard-heading mb-1">Ringkasan Inventaris</h1>
+        <p class="dashboard-subtitle mb-0">Pantau aset IT Server Room Pelindo Regional 1 dalam satu tampilan.</p>
     </div>
-
+    <div class="dashboard-date"><i class="bi bi-calendar3"></i>{{ now()->translatedFormat('d F Y') }}</div>
 </div>
 
 
@@ -312,6 +403,11 @@
 
 </div>
 
+<div class="row g-3 mb-4">
+    <div class="col-md-6"><a class="alert-card alert-card-warning text-decoration-none h-100" href="{{ route('inspections.index', ['not_inspected_since' => now()->subDays(90)->toDateString()]) }}"><span class="alert-card-icon"><i class="bi bi-clock-history"></i></span><span><span class="alert-card-label d-block">Belum diperiksa dalam 90 hari</span><span class="alert-card-number d-block">{{ $overdueInspections }}</span><span class="alert-card-copy">Tindak lanjuti pemeriksaan aset</span></span><i class="bi bi-arrow-right ms-auto text-muted small"></i></a></div>
+    <div class="col-md-6"><a class="alert-card alert-card-danger text-decoration-none h-100" href="{{ route('inspections.index', ['condition' => 'Rusak Berat']) }}"><span class="alert-card-icon"><i class="bi bi-exclamation-triangle"></i></span><span><span class="alert-card-label d-block">Aset rusak berat</span><span class="alert-card-number d-block">{{ $criticalAssets }}</span><span class="alert-card-copy">Prioritas untuk penanganan segera</span></span><i class="bi bi-arrow-right ms-auto text-muted small"></i></a></div>
+</div>
+
 <!-- MENU CEPAT DAN INFORMASI SISTEM -->
 <div class="row g-4 mb-4">
 
@@ -326,7 +422,7 @@
 
             <div class="row g-3">
 
-                <div class="col-md-4">
+                <div class="col-4 col-md-4">
                     <a href="{{ route('assets.create') }}"
                        class="text-decoration-none d-block h-100">
                         <div class="quick-action">
@@ -340,7 +436,7 @@
                     </a>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-4 col-md-4">
                     <a href="{{ route('scan.index') }}"
                        class="text-decoration-none d-block h-100">
                         <div class="quick-action">
@@ -355,7 +451,7 @@
                 </div>
 
                 
-                <div class="col-md-4">
+                <div class="col-4 col-md-4">
                     <a href="{{ route('inspections.index') }}"
                     class="text-decoration-none d-block h-100">
                         <div class="quick-action">
@@ -383,19 +479,19 @@
                 Informasi Sistem
             </h5>
 
-            <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
-                <span class="text-muted small">Sistem</span>
-                <span class="fw-semibold small">Pelindo Inventory</span>
+            <div class="system-row d-flex justify-content-between align-items-center">
+                <span class="system-label">Sistem</span>
+                <span class="system-value">Pelindo Inventory</span>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
-                <span class="text-muted small">Regional</span>
-                <span class="fw-semibold small">Regional 1</span>
+            <div class="system-row d-flex justify-content-between align-items-center">
+                <span class="system-label">Regional</span>
+                <span class="system-value">Regional 1</span>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center py-3">
-                <span class="text-muted small">Lokasi</span>
-                <span class="fw-semibold small">IT Server Room</span>
+            <div class="system-row d-flex justify-content-between align-items-center">
+                <span class="system-label">Lokasi</span>
+                <span class="system-value">IT Server Room</span>
             </div>
 
         </div>
@@ -494,8 +590,8 @@
 </div>
 
 {{-- GRAFIK KONDISI ASET --}}
-<div class="card border-0 shadow-sm mt-4">
-    <div class="card-header bg-white py-3">
+<div class="card dashboard-panel chart-panel mt-4">
+    <div class="card-header">
         <h5 class="fw-bold mb-0">
             <i class="bi bi-pie-chart me-2 text-primary"></i>
             Grafik Kondisi Aset
@@ -503,19 +599,46 @@
     </div>
 
     <div class="card-body">
-        <div style="max-width: 500px; margin: 0 auto;">
-            <canvas id="assetConditionChart"></canvas>
+        <div class="row align-items-center g-4">
+            <div class="col-md-6">
+                <div class="chart-container"><canvas id="assetConditionChart"></canvas></div>
+            </div>
+            <div class="col-md-6">
+                <p class="text-muted small mb-3">Distribusi kondisi seluruh aset yang tercatat saat ini.</p>
+                <div class="condition-legend">
+                    <div class="condition-legend-item"><span class="condition-legend-name"><span class="legend-dot legend-good"></span>Baik</span><span class="condition-legend-value">{{ $goodAssets ?? 0 }}</span></div>
+                    <div class="condition-legend-item"><span class="condition-legend-name"><span class="legend-dot legend-minor"></span>Rusak Ringan</span><span class="condition-legend-value">{{ $minorDamage ?? 0 }}</span></div>
+                    <div class="condition-legend-item"><span class="condition-legend-name"><span class="legend-dot legend-major"></span>Rusak Berat</span><span class="condition-legend-value">{{ $majorDamage ?? 0 }}</span></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('assetConditionChart');
 
     if (!canvas) return;
+
+    const totalAssets = {{ $totalAssets ?? 0 }};
+    const centerText = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const { ctx, chartArea: { left, right, top, bottom } } = chart;
+            const x = (left + right) / 2;
+            const y = (top + bottom) / 2;
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#173B63';
+            ctx.font = '700 25px Segoe UI, sans-serif';
+            ctx.fillText(totalAssets, x, y - 3);
+            ctx.fillStyle = '#8192A5';
+            ctx.font = '600 11px Segoe UI, sans-serif';
+            ctx.fillText('TOTAL ASET', x, y + 17);
+            ctx.restore();
+        }
+    };
 
     new Chart(canvas, {
         type: 'doughnut',
@@ -536,18 +659,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     '#ffc107',
                     '#dc3545'
                 ],
-                borderWidth: 1
+                borderColor: '#FFFFFF',
+                borderWidth: 5,
+                borderRadius: 5,
+                hoverOffset: 5
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            cutout: '72%',
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#173B63',
+                    padding: 11,
+                    displayColors: true,
+                    callbacks: { label: (context) => ` ${context.label}: ${context.parsed} aset` }
                 }
             }
-        }
+        },
+        plugins: [centerText]
     });
 });
 </script>

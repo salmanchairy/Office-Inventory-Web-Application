@@ -188,7 +188,7 @@
                     <select name="location_id"
                             id="location_id"
                             class="form-select @error('location_id') is-invalid @enderror"
-                            required>
+                            disabled>
                         <option value="">-- Pilih Lokasi --</option>
 
                         @foreach ($locations as $location)
@@ -204,6 +204,7 @@
                     @error('location_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    <small class="text-muted">Gunakan menu Pindahkan Aset untuk mengubah lokasi dan mencatat riwayat.</small>
                 </div>
 
                 <!-- Merek -->
@@ -305,7 +306,7 @@
                     <select name="condition"
                             id="condition"
                             class="form-select @error('condition') is-invalid @enderror"
-                            required>
+                            disabled>
                         @foreach (['Baik', 'Rusak Ringan', 'Rusak Berat'] as $condition)
                             <option value="{{ $condition }}"
                                 @selected(old('condition', $asset->condition) === $condition)>
@@ -317,6 +318,7 @@
                     @error('condition')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    <small class="text-muted">Kondisi diperbarui melalui pemeriksaan aset.</small>
                 </div>
 
                 <!-- Status -->
@@ -328,7 +330,7 @@
                     <select name="status"
                             id="status"
                             class="form-select @error('status') is-invalid @enderror"
-                            required>
+                            disabled>
                         @foreach ([
                             'Aktif',
                             'Dipinjam',
@@ -347,6 +349,7 @@
                     @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    <small class="text-muted">Status berubah melalui proses pemeriksaan atau perpindahan.</small>
                 </div>
 
                 <!-- Deskripsi -->

@@ -1,6 +1,9 @@
 
 @extends('layouts.app')
 
+@section('title', 'Riwayat Pemeriksaan')
+@section('page-title', 'Riwayat Pemeriksaan')
+
 @section('content')
 <div class="container-fluid">
 

@@ -157,6 +157,15 @@
 
 </div>
 
+<form method="GET" class="card border-0 shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+        <div class="col-md-5"><label class="form-label" for="search">Cari aset atau lokasi</label><input class="form-control" id="search" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Kode, merek, nomor seri, atau lokasi"></div>
+        <div class="col-md-3"><label class="form-label" for="condition">Kondisi</label><select class="form-select" id="condition" name="condition"><option value="">Semua kondisi</option>@foreach(['Baik', 'Rusak Ringan', 'Rusak Berat'] as $condition)<option value="{{ $condition }}" @selected(($filters['condition'] ?? '') === $condition)>{{ $condition }}</option>@endforeach</select></div>
+        <div class="col-md-2"><label class="form-label" for="not_inspected_since">Belum diperiksa sejak</label><input class="form-control" id="not_inspected_since" name="not_inspected_since" type="date" value="{{ $filters['not_inspected_since'] ?? '' }}"></div>
+        <div class="col-md-2 d-flex gap-2"><button class="btn btn-primary flex-grow-1"><i class="bi bi-funnel me-1"></i>Filter</button><a class="btn btn-outline-secondary" href="{{ route('inspections.index') }}">Reset</a></div>
+    </div>
+</form>
+
 <div class="inspection-card">
 
     <div class="inspection-card-header">

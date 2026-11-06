@@ -14,16 +14,27 @@ class AssetController extends Controller
     /**
      * Menampilkan semua asset
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = trim((string) $request->query('search', ''));
         $assets = Asset::with([
             'category',
             'location'
         ])
+        ->when($search !== '', function ($query) use ($search) {
+            $query->where(function ($assetQuery) use ($search) {
+                $assetQuery->where('asset_code', 'like', "%{$search}%")
+                    ->orWhere('brand', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%")
+                    ->orWhere('serial_number', 'like', "%{$search}%")
+                    ->orWhereHas('location', fn ($location) => $location->where('regional', 'like', "%{$search}%")->orWhere('site', 'like', "%{$search}%")->orWhere('room', 'like', "%{$search}%"));
+            });
+        })
         ->latest()
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString();
 
-        return view('assets.index', compact('assets'));
+        return view('assets.index', compact('assets', 'search'));
     }
 
     /**
@@ -135,7 +146,6 @@ class AssetController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
-            'location_id' => ['required', 'exists:locations,id'],
             'brand' => ['required', 'string', 'max:100'],
             'model' => ['nullable', 'string', 'max:100'],
             'serial_number' => [
@@ -146,8 +156,6 @@ class AssetController extends Controller
             ],
             'purchase_date' => ['nullable', 'date'],
             'acquisition_year' => ['nullable', 'integer', 'min:1900', 'max:2100'],
-            'condition' => ['required', 'in:Baik,Rusak Ringan,Rusak Berat'],
-            'status' => ['required', 'in:Aktif,Dipinjam,Dipindahkan,Diperbaiki,Tidak Aktif,Dihapus'],
             'description' => ['nullable', 'string'],
         ]);
 

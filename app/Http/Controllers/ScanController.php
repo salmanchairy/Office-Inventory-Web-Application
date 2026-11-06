@@ -32,7 +32,7 @@ class ScanController extends Controller
             'asset' => [
                 'id' => $asset->id,
                 'asset_code' => $asset->asset_code,
-                'url' => route('assets.show', $asset->id),
+                'url' => route('assets.show', $asset, false),
             ],
         ]);
     }

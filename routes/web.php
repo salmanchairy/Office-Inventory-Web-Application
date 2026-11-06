@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\AuthController;
@@ -6,6 +5,12 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\InspectionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\AssetMovementController;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Route;
 
@@ -35,20 +40,51 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Data Aset
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource('assets', AssetController::class);
-
-    /*
-    |--------------------------------------------------------------------------
-    | QR Code Aset
+    | QR Code Aset (Ditempatkan sebelum Route::resource)
     |--------------------------------------------------------------------------
     */
 
     Route::get('/assets/{asset}/qr', [QrCodeController::class, 'generate'])
         ->name('assets.qr');
+    Route::get('/assets/{asset}/qr/print', [QrCodeController::class, 'print'])
+        ->name('assets.qr.print');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Data Aset & Master Data
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('assets', AssetController::class);
+    Route::get('/assets/{asset}/move', [AssetMovementController::class, 'create'])->name('assets.move.create');
+    Route::post('/assets/{asset}/move', [AssetMovementController::class, 'store'])->name('assets.move.store');
+
+    Route::get('/reports/assets', [ReportController::class, 'index'])
+        ->name('reports.assets');
+
+    Route::get('/reports/assets/export', [ReportController::class, 'export'])
+        ->name('reports.assets.export');
+
+    Route::resource('categories', CategoryController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('locations', LocationController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('users', UserController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Peta Persebaran & API Map
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/peta-persebaran', [MapController::class, 'index'])
+        ->name('maps.index');
+
+    Route::get('/api/map/locations', [LocationController::class, 'apiLocations'])
+        ->name('api.map.locations');
 
     /*
     |--------------------------------------------------------------------------
@@ -76,7 +112,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/inspections/history', [InspectionController::class, 'history'])
         ->name('inspections.history');
 
-        
     // Detail satu hasil pemeriksaan aset
     Route::get('/inspections/history/{inspection}', [InspectionController::class, 'show'])
         ->name('inspections.show');
@@ -111,12 +146,20 @@ Route::middleware('auth')->group(function () {
             ->take(5)
             ->get();
 
+        $overdueInspections = Asset::whereDoesntHave('inspections', function ($query) {
+            $query->whereDate('inspection_date', '>=', now()->subDays(90));
+        })->count();
+
+        $criticalAssets = Asset::where('condition', 'Rusak Berat')->count();
+
         return view('dashboard', compact(
             'totalAssets',
             'goodAssets',
             'minorDamage',
             'majorDamage',
-            'assetsNeedRepair'
+            'assetsNeedRepair',
+            'overdueInspections',
+            'criticalAssets'
         ));
 
     })->name('dashboard');

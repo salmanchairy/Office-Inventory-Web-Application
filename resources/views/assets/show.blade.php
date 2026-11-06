@@ -45,6 +45,9 @@
                 Mulai Pemeriksaan
             </a>
 
+            <a href="{{ route('assets.move.create', $asset) }}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left-right me-1"></i>Pindahkan
+            </a>
 
         </div>
 
@@ -568,7 +571,7 @@
 
                         <div class="py-3 text-center">
                             <img
-                                src="{{ route('assets.qr', $asset) }}"
+                                src="/assets/{{ $asset->getRouteKey() }}/qr"
                                 alt="QR Code {{ $asset->asset_code }}"
                                 class="img-fluid"
                                 style="max-width: 250px;"
@@ -590,6 +593,11 @@
                         pemeriksaan asset.
 
                     </small>
+
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-download-qr data-qr-url="{{ route('assets.qr', $asset) }}" data-code="{{ $asset->asset_code }}" data-name="{{ trim($asset->brand . ' ' . $asset->model) }}" data-serial="{{ $asset->serial_number }}"><i class="bi bi-download me-1"></i>Unduh PNG</button>
+                        <a href="{{ route('assets.qr.print', $asset) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-dark"><i class="bi bi-printer me-1"></i>Cetak</a>
+                    </div>
 
                 </div>
 
@@ -759,3 +767,9 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.querySelectorAll('[data-download-qr]').forEach((button) => button.addEventListener('click', async () => { const svg = await (await fetch(button.dataset.qrUrl)).text(), image = new Image(); image.src = 'data:image/svg+xml;base64,' + btoa(svg); await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; }); const canvas = document.createElement('canvas'), context = canvas.getContext('2d'); canvas.width = 720; canvas.height = 820; context.fillStyle = '#fff'; context.fillRect(0, 0, 720, 820); context.strokeStyle = '#6d9fc8'; context.lineWidth = 3; context.roundRect(18, 18, 684, 784, 18); context.stroke(); context.textAlign = 'center'; context.fillStyle = '#07569b'; context.font = 'bold 28px Arial'; context.fillText('Pelindo Inventory', 360, 70); context.fillStyle = '#173b5d'; context.font = 'bold 27px Arial'; context.fillText(button.dataset.code, 360, 115); context.drawImage(image, 160, 135, 400, 400); context.font = 'bold 23px Arial'; context.fillText(button.dataset.name || '-', 360, 585); context.fillStyle = '#456987'; context.font = '18px Arial'; context.fillText('Nomor seri: ' + (button.dataset.serial || '-'), 360, 625); const link = document.createElement('a'); link.download = button.dataset.code + '-label-qr.png'; link.href = canvas.toDataURL('image/png'); link.click(); }));
+</script>
+@endpush

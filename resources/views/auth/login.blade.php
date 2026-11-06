@@ -621,7 +621,7 @@
                     </div>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label for="password" class="form-label">
                         Password
                     </label>
@@ -641,6 +641,20 @@
                             required
                         >
                     </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input
+                        type="checkbox"
+                        id="remember"
+                        name="remember"
+                        value="1"
+                        class="form-check-input"
+                        @checked(old('remember'))
+                    >
+                    <label class="form-check-label text-muted small" for="remember">
+                        Ingat saya di perangkat ini
+                    </label>
                 </div>
 
                 <button type="submit" class="btn login-btn">

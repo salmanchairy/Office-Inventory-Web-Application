@@ -11,17 +11,7 @@
         @yield('title', 'Dashboard') - Pelindo Inventory
     </title>
 
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-    <!-- Bootstrap Icons -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    >
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 
     <style>
@@ -43,28 +33,31 @@
             margin: 0;
             background: var(--pelindo-bg);
             color: var(--pelindo-text);
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
         }
 
         /* SIDEBAR */
         .sidebar {
-            width: 250px;
+            width: 270px;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 1050;
-            padding: 18px 12px;
-            overflow-y: auto;
+            padding: 12px 12px 14px;
+            overflow: hidden;
             background: #FFFFFF;
             color: var(--pelindo-text);
             border-right: 1px solid var(--pelindo-border);
-            box-shadow: 3px 0 15px rgba(28, 78, 125, 0.04);
+            box-shadow: 8px 0 28px rgba(28, 78, 125, .08);
         }
 
+        .sidebar::before { content: ""; position: absolute; inset: 0; pointer-events: none; }
+
         .sidebar-brand {
-            margin: -18px -12px 22px;
-            padding: 22px 14px 20px;
+            position: relative;
+            margin: -12px -12px 10px;
+            padding: 13px 16px 10px;
             text-align: center;
             background: #FFFFFF;
             border-bottom: 1px solid var(--pelindo-border);
@@ -73,18 +66,18 @@
         
         .pelindo-logo-wrap {
             width: 100%;
-            min-height: 95px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
+            margin-bottom: 0;
         }
 
         .pelindo-logo {
             display: block;
-            width: 220px;
+            width: 178px;
             max-width: 100%;
-            max-height: 90px;
+            max-height: 56px;
             height: auto;
             object-fit: contain;
         }
@@ -104,8 +97,9 @@
 
         .pelindo-brand-title {
             color: var(--pelindo-blue-dark);
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
+            letter-spacing: .2px;
             line-height: 1.4;
         }
 
@@ -113,14 +107,15 @@
             display: block;
             margin-top: 5px;
             color: var(--pelindo-muted);
-            font-size: 11px;
+            font-size: 10px;
             line-height: 1.5;
         }
 
         .menu-title {
-            margin: 22px 12px 8px;
+            position: relative;
+            margin: 10px 11px 4px;
             color: var(--pelindo-muted);
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -129,17 +124,21 @@
         .sidebar a {
             display: flex;
             align-items: center;
-            padding: 11px 13px;
-            margin-bottom: 5px;
-            border-radius: 9px;
+            position: relative;
+            min-height: 39px;
+            padding: 8px 12px;
+            margin-bottom: 2px;
+            border: 1px solid transparent;
+            border-radius: 10px;
             text-decoration: none;
             color: #526B87;
             font-size: 13px;
-            transition: background 0.2s ease, color 0.2s ease;
+            font-weight: 500;
+            transition: background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease;
         }
 
         .sidebar a i {
-            width: 22px;
+            width: 21px;
             margin-right: 10px;
             color: var(--pelindo-blue);
             font-size: 17px;
@@ -147,8 +146,10 @@
         }
 
         .sidebar a:hover {
-            background: var(--pelindo-blue-light);
             color: var(--pelindo-blue-dark);
+            background: var(--pelindo-blue-light);
+            border-color: transparent;
+            transform: translateX(2px);
         }
 
         .sidebar a:hover i {
@@ -158,9 +159,11 @@
         
         /* Menu sidebar yang sedang aktif */
         .sidebar a.active {
-            background: var(--pelindo-blue-light);
             color: var(--pelindo-blue-dark);
+            background: var(--pelindo-blue-light);
+            border-color: transparent;
             font-weight: 700;
+            box-shadow: none;
         }
 
         .sidebar a.active i {
@@ -171,37 +174,44 @@
         /* MAIN CONTENT */
         .main-content {
             min-height: 100vh;
-            margin-left: 250px;
-            background: var(--pelindo-bg);
+            margin-left: 270px;
+            background: transparent;
         }
 
         /* TOPBAR */
         .topbar {
-            height: 70px;
+            min-height: 78px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
+            padding: 0 34px;
             background: #FFFFFF;
             border-bottom: 1px solid var(--pelindo-border);
+            backdrop-filter: blur(16px);
         }
 
         .page-title {
             color: var(--pelindo-blue-dark);
-            font-size: 20px;
+            font-size: 21px;
             font-weight: 700;
+            letter-spacing: -.3px;
         }
 
         /* CONTENT */
         .content {
-            padding: 30px;
+            padding: 32px 34px 42px;
         }
 
         /* USER INFO */
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 11px;
+            padding: 6px 8px 6px 13px;
+            border: 1px solid #e4edf5;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(24, 71, 117, .05);
         }
 
         .user-name {
@@ -216,8 +226,8 @@
         }
 
         .user-avatar {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -229,15 +239,17 @@
 
         /* LOGOUT */
         .logout-btn {
-            padding: 5px;
+            padding: 5px 7px;
             border: none;
             background: transparent;
-            color: #7186A0;
+            color: #7186a0;
             cursor: pointer;
         }
 
         .logout-btn:hover {
-            color: #DC3545;
+            color: #dc3545;
+            background: #fff2f2;
+            border-radius: 7px;
         }
 
         /* MOBILE MENU */
@@ -245,24 +257,24 @@
             display: none;
             border: none;
             background: transparent;
-            color: var(--pelindo-blue);
+            color: #126ab0;
             font-size: 24px;
         }
 
         /* DASHBOARD CARDS */
         .card {
             overflow: hidden;
-            border: 1px solid var(--pelindo-border);
-            border-radius: 12px;
+            border: 1px solid rgba(218, 229, 241, .9);
+            border-radius: 16px;
             background: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(31, 82, 130, 0.05);
+            box-shadow: 0 10px 28px rgba(31, 82, 130, .055);
         }
 
         /* FORM AND TABLE */
         .form-control,
         .form-select {
-            border-color: #D7E3F0;
-            border-radius: 8px;
+            border-color: #d7e3f0;
+            border-radius: 9px;
         }
 
         .form-control:focus,
@@ -275,29 +287,37 @@
             --bs-table-bg: transparent;
         }
 
+        .table thead th { color: #56718e; font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; background: #f7faff; border-bottom-color: #e8eff6; }
+        .table > :not(caption) > * > * { padding: .9rem 1rem; border-bottom-color: #edf2f7; }
+        .btn { border-radius: 9px; font-weight: 600; }
+        .alert { border: 0; border-radius: 12px; box-shadow: 0 8px 18px rgba(26, 70, 110, .05); }
+        .sidebar-backdrop { display: none; }
+
         /* MOBILE RESPONSIVE */
         @media (max-width: 768px) {
             .sidebar {
-                width: 250px;
+                width: 270px;
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                transition: transform .28s ease;
             }
 
             .sidebar.show {
                 transform: translateX(0);
             }
 
+            .sidebar-backdrop.show { display: block; position: fixed; inset: 0; z-index: 1040; background: rgba(3, 20, 44, .45); backdrop-filter: blur(2px); }
+
             .main-content {
                 margin-left: 0;
             }
 
             .topbar {
-                height: 64px;
+                min-height: 64px;
                 padding: 0 15px;
             }
 
             .content {
-                padding: 20px 15px;
+                padding: 22px 15px 30px;
             }
 
             .mobile-menu-btn {
@@ -310,10 +330,11 @@
             }
 
             .pelindo-logo {
-                width: 175px;
-                max-height: 72px;
+                width: 165px;
+                max-height: 56px;
             }
         }
+
     </style>
 
     @stack('styles')
@@ -323,6 +344,8 @@
 
 <body>
 
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
     <!-- SIDEBAR -->
 
@@ -338,12 +361,6 @@
                 >
             </div>
 
-            <div class="pelindo-brand-title">Pelindo Inventory</div>
-
-            <small class="pelindo-brand-subtitle">
-                IT Server Room — Regional 1
-            </small>
-
         </div>
 
 
@@ -354,7 +371,8 @@
             Menu Utama
         </div>
 
-        <a href="{{ route('dashboard') }}">
+        <a href="{{ route('dashboard') }}"
+           class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 
             <i class="bi bi-speedometer2"></i>
 
@@ -369,7 +387,8 @@
             Inventaris
         </div>
 
-        <a href="{{ route('assets.index') }}">
+        <a href="{{ route('assets.index') }}"
+           class="{{ request()->routeIs('assets.*') ? 'active' : '' }}">
 
             <i class="bi bi-box-seam"></i>
 
@@ -377,13 +396,12 @@
 
         </a>
 
-        <a href="{{ route('scan.index') }}">
+        <a href="{{ route('scan.index') }}"
+           class="{{ request()->routeIs('scan.*') ? 'active' : '' }}">
             <i class="bi bi-qr-code-scan"></i>
             Scan QR / Barcode
         </a>
 
-
-    
         <!-- PEMERIKSAAN -->
 
         <div class="menu-title">
@@ -413,11 +431,12 @@
             Laporan
         </div>
 
-        <a href="#">
+        <a href="{{ route('reports.assets') }}"
+           class="{{ request()->routeIs('reports.*') ? 'active' : '' }}">
 
             <i class="bi bi-file-earmark-bar-graph"></i>
 
-            Laporan Asset
+            Rekap & Ekspor Aset
 
         </a>
 
@@ -430,7 +449,8 @@
                 Administrator
             </div>
 
-            <a href="#">
+            <a href="{{ route('users.index') }}"
+               class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
 
                 <i class="bi bi-people"></i>
 
@@ -438,7 +458,8 @@
 
             </a>
 
-            <a href="#">
+            <a href="{{ route('categories.index') }}"
+               class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
 
                 <i class="bi bi-tags"></i>
 
@@ -446,16 +467,16 @@
 
             </a>
 
-            <a href="#">
+            <a href="{{ route('locations.index') }}"
+               class="{{ request()->routeIs('locations.*', 'maps.*') ? 'active' : '' }}">
 
                 <i class="bi bi-geo-alt"></i>
 
-                Lokasi
+                Lokasi & Peta
 
             </a>
 
         @endif
-
 
     </div>
 
@@ -564,19 +585,14 @@
     <script>
 
         function toggleSidebar() {
-
             const sidebar = document.getElementById('sidebar');
-
-            sidebar.classList.toggle('show');
-
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const isOpen = sidebar.classList.toggle('show');
+            backdrop.classList.toggle('show', isOpen);
         }
 
     </script>
 
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    ></script>
 
 
     @stack('scripts')

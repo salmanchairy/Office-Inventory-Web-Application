@@ -16,11 +16,42 @@ class InspectionController extends Controller
     */
     public function index()
     {
-        $assets = Asset::with(['category', 'location'])
-            ->orderBy('asset_code', 'asc')
-            ->paginate(10);
+        $filters = request()->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'condition' => ['nullable', 'in:Baik,Rusak Ringan,Rusak Berat'],
+            'not_inspected_since' => ['nullable', 'date'],
+        ]);
 
-        return view('inspections.index', compact('assets'));
+        $search = trim((string) ($filters['search'] ?? ''));
+
+        $assets = Asset::with(['category', 'location'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($assetQuery) use ($search) {
+                    $assetQuery
+                        ->where('asset_code', 'like', "%{$search}%")
+                        ->orWhere('brand', 'like', "%{$search}%")
+                        ->orWhere('model', 'like', "%{$search}%")
+                        ->orWhere('serial_number', 'like', "%{$search}%")
+                        ->orWhereHas('location', function ($locationQuery) use ($search) {
+                            $locationQuery
+                                ->where('regional', 'like', "%{$search}%")
+                                ->orWhere('site', 'like', "%{$search}%")
+                                ->orWhere('building', 'like', "%{$search}%")
+                                ->orWhere('room', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when($filters['condition'] ?? null, fn ($query, $condition) => $query->where('condition', $condition))
+            ->when($filters['not_inspected_since'] ?? null, function ($query, $date) {
+                $query->whereDoesntHave('inspections', function ($inspectionQuery) use ($date) {
+                    $inspectionQuery->whereDate('inspection_date', '>=', $date);
+                });
+            })
+            ->orderBy('asset_code', 'asc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('inspections.index', compact('assets', 'filters'));
     }
 
     /*
